@@ -1,1 +1,12 @@
 @import 'tailwindcss';
+
+@font-face {
+  font-family: 'Nitz';
+  src: url('/Nitz.ttf') format('truetype');
+}
+
+@layer base {
+  html {
+    color-scheme: light dark;
+  }
+}

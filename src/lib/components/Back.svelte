@@ -7,6 +7,7 @@
   };
 
   let { name }: Props = $props();
+  let p5Instance: p5;
 
   const ALPHABET = "abcdefghijklmnopqrstuvwxyz".split("");
 
@@ -14,7 +15,16 @@
     return ALPHABET.indexOf(char.toLowerCase());
   }
 
+  function downloadPNG() {
+    if (p5Instance) {
+      p5Instance.save(
+        `recurse-badge-${name.replace(/\s+/g, "-").toLowerCase()}.png`,
+      );
+    }
+  }
+
   function sketch(p5: p5) {
+    p5Instance = p5;
     const bayer8 = [
       [0, 32, 8, 40, 2, 34, 10, 42],
       [48, 16, 56, 24, 50, 18, 58, 26],
@@ -33,7 +43,8 @@
     };
 
     p5.setup = () => {
-      p5.createCanvas(85.6 * 5, 54.0 * 5);
+      // Use reasonable pixel dimensions, CSS will handle display size
+      p5.createCanvas(428, 270); // 2x scale for crisp rendering
       p5.pixelDensity(1);
       p5.background(255);
     };
@@ -45,14 +56,14 @@
       const w = p5.width / count;
 
       chars.forEach((char, i) => {
-        let offset = Math.floor((p5.width / count) * i);
-        let order = alphaOrder(char);
+        const offset = Math.floor((p5.width / count) * i);
+        const order = alphaOrder(char);
 
-        let cx = offset + w / 2;
-        let cy = order >= 0 ? (p5.height / 26) * order : p5.height / 2;
-        let r = order >= 0 ? p5.height / 2 : p5.height;
+        const cx = offset + w / 2;
+        const cy = order >= 0 ? (p5.height / 26) * order : p5.height / 2;
+        const r = order >= 0 ? p5.height / 2 : p5.height;
 
-        let gradient = ctx.createRadialGradient(cx, cy, 0, cx, cy, r);
+        const gradient = ctx.createRadialGradient(cx, cy, 0, cx, cy, r);
         gradient.addColorStop(0, order === -1 ? "white" : `black`);
         gradient.addColorStop(1, order === -1 ? "black" : `white`);
 
@@ -68,14 +79,14 @@
 
       for (let y = 0; y < p5.height; y++) {
         for (let x = 0; x < p5.width; x++) {
-          let i = 4 * (x + y * p5.width);
-          let gray =
+          const i = 4 * (x + y * p5.width);
+          const gray =
             p5.pixels[i] * 0.299 +
             p5.pixels[i + 1] * 0.587 +
             p5.pixels[i + 2] * 0.114;
 
-          let thresh = bayer8[y % screenSize][x % screenSize] * (255 / 64);
-          let val = gray < thresh ? 0 : 255;
+          const thresh = bayer8[y % screenSize][x % screenSize] * (255 / 64);
+          const val = gray < thresh ? 0 : 255;
 
           p5.pixels[i] = p5.pixels[i + 1] = p5.pixels[i + 2] = val;
         }
@@ -97,4 +108,28 @@
   }
 </script>
 
-<P5 {sketch} />
+<div class="badge-container">
+  <div class="canvas-wrapper rounded-xl overflow-clip">
+    <P5 {sketch} />
+  </div>
+  <button
+    class="mt-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+    onclick={downloadPNG}
+  >
+    Download PNG
+  </button>
+</div>
+
+<style>
+  .canvas-wrapper {
+    width: 85.6mm;
+    height: 54mm;
+    border: 1px solid #ccc;
+  }
+
+  .canvas-wrapper :global(canvas) {
+    width: 100% !important;
+    height: 100% !important;
+    image-rendering: pixelated;
+  }
+</style>

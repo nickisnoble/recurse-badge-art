@@ -4,10 +4,14 @@
 
   type Props = {
     name: string;
+    batch: string;
   };
 
-  let { name }: Props = $props();
+  let { name, batch }: Props = $props();
   let p5Instance: p5;
+  
+  // Export p5Instance for parent component
+  export { p5Instance };
 
   const ALPHABET = "abcdefghijklmnopqrstuvwxyz".split("");
 
@@ -15,13 +19,6 @@
     return ALPHABET.indexOf(char.toLowerCase());
   }
 
-  function downloadPNG() {
-    if (p5Instance) {
-      p5Instance.save(
-        `recurse-badge-${name.replace(/\s+/g, "-").toLowerCase()}.png`,
-      );
-    }
-  }
 
   function sketch(p5: p5) {
     p5Instance = p5;
@@ -108,16 +105,8 @@
   }
 </script>
 
-<div class="badge-container">
-  <div class="canvas-wrapper rounded-xl overflow-clip">
-    <P5 {sketch} />
-  </div>
-  <button
-    class="mt-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
-    onclick={downloadPNG}
-  >
-    Download PNG
-  </button>
+<div class="canvas-wrapper rounded-xl overflow-clip">
+  <P5 {sketch} />
 </div>
 
 <style>

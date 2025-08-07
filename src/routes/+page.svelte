@@ -8,12 +8,32 @@
   let backComponent: Back;
 
   function downloadBothSides() {
-    // Download front
+    // Download front (rotated 90 degrees counter-clockwise)
     if (frontComponent?.p5Instance) {
-      frontComponent.p5Instance.save(`recurse-badge-front-${name.replace(/\s+/g, '-').toLowerCase()}.png`);
+      const p5Front = frontComponent.p5Instance;
+      const frontCanvas = p5Front.canvas;
+      
+      // Create a new canvas for rotation
+      const rotatedCanvas = document.createElement('canvas');
+      rotatedCanvas.width = frontCanvas.height; // Swap dimensions
+      rotatedCanvas.height = frontCanvas.width;
+      const ctx = rotatedCanvas.getContext('2d');
+      
+      if (ctx) {
+        // Rotate 90 degrees counter-clockwise
+        ctx.translate(0, frontCanvas.width);
+        ctx.rotate(-Math.PI / 2);
+        ctx.drawImage(frontCanvas, 0, 0);
+        
+        // Download the rotated image
+        const link = document.createElement('a');
+        link.download = `recurse-badge-front-${name.replace(/\s+/g, '-').toLowerCase()}.png`;
+        link.href = rotatedCanvas.toDataURL();
+        link.click();
+      }
     }
     
-    // Download back
+    // Download back (already horizontal)
     if (backComponent?.p5Instance) {
       backComponent.p5Instance.save(`recurse-badge-back-${name.replace(/\s+/g, '-').toLowerCase()}.png`);
     }

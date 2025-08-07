@@ -8,5 +8,12 @@
 @layer base {
   html {
     color-scheme: light dark;
+    font-family: 'Nitz', sans-serif;
+  }
+  
+  body {
+    background-color: white;
+    color: #333;
+    line-height: 1.5;
   }
 }

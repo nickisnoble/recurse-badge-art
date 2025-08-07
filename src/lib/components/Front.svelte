@@ -84,7 +84,7 @@
       if (currentLine) lines.push(currentLine);
 
       // Draw wrapped text
-      const lineHeight = p5.textSize() * 1.2;
+      const lineHeight = p5.textSize() * 0.9; // Tighter line height
       const startY = p5.height * 0.6 - ((lines.length - 1) * lineHeight) / 2;
 
       lines.forEach((line, i) => {
@@ -93,7 +93,7 @@
 
       // Draw batch below name
       p5.textSize(p5.width * 0.08);
-      p5.text(batch, p5.width / 2, p5.height * 0.75);
+      p5.text(batch, p5.width / 2, p5.height * 0.84);
 
       // Draw "RECURSE CENTER" at bottom
       p5.textSize(p5.width * 0.06);

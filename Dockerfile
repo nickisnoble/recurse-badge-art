@@ -10,4 +10,7 @@ COPY . .
 
 RUN npm run build
 
+# Verify build directory exists
+RUN ls -la build/
+
 EXPOSE 3000

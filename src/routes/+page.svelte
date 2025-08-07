@@ -3,7 +3,7 @@
   import Front from "$lib/components/Front.svelte";
 
   let name = $state("Nick Noble");
-  let batch = $state("Summer '1");
+  let batch = $state("S1'25");
   let frontComponent: Front;
   let backComponent: Back;
 
@@ -12,30 +12,32 @@
     if (frontComponent?.p5Instance) {
       const p5Front = frontComponent.p5Instance;
       const frontCanvas = p5Front.canvas;
-      
+
       // Create a new canvas for rotation
-      const rotatedCanvas = document.createElement('canvas');
+      const rotatedCanvas = document.createElement("canvas");
       rotatedCanvas.width = frontCanvas.height; // Swap dimensions
       rotatedCanvas.height = frontCanvas.width;
-      const ctx = rotatedCanvas.getContext('2d');
-      
+      const ctx = rotatedCanvas.getContext("2d");
+
       if (ctx) {
         // Rotate 90 degrees counter-clockwise
         ctx.translate(0, frontCanvas.width);
         ctx.rotate(-Math.PI / 2);
         ctx.drawImage(frontCanvas, 0, 0);
-        
+
         // Download the rotated image
-        const link = document.createElement('a');
-        link.download = `recurse-badge-front-${name.replace(/\s+/g, '-').toLowerCase()}.png`;
+        const link = document.createElement("a");
+        link.download = `recurse-badge-front-${name.replace(/\s+/g, "-").toLowerCase()}.png`;
         link.href = rotatedCanvas.toDataURL();
         link.click();
       }
     }
-    
+
     // Download back (already horizontal)
     if (backComponent?.p5Instance) {
-      backComponent.p5Instance.save(`recurse-badge-back-${name.replace(/\s+/g, '-').toLowerCase()}.png`);
+      backComponent.p5Instance.save(
+        `recurse-badge-back-${name.replace(/\s+/g, "-").toLowerCase()}.png`,
+      );
     }
   }
 </script>
@@ -43,13 +45,17 @@
 <main class="min-h-screen bg-white">
   <div class="max-w-4xl mx-auto px-8 py-12">
     <div class="text-center mb-12">
-      <h1 class="text-4xl font-bold mb-4 text-gray-900">Recurse Badge Generator</h1>
+      <h1 class="text-4xl font-bold mb-4 text-gray-900">
+        Recurse Badge Generator
+      </h1>
       <p class="text-gray-600 text-lg">Create your personalized RC badge</p>
     </div>
 
     <div class="mb-8 space-y-4 max-w-md mx-auto">
       <div>
-        <label for="name" class="block text-sm font-medium text-gray-700 mb-2">Name</label>
+        <label for="name" class="block text-sm font-medium text-gray-700 mb-2"
+          >Name</label
+        >
         <input
           class="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-transparent"
           type="text"
@@ -62,7 +68,9 @@
       </div>
 
       <div>
-        <label for="batch" class="block text-sm font-medium text-gray-700 mb-2">Batch</label>
+        <label for="batch" class="block text-sm font-medium text-gray-700 mb-2"
+          >Batch</label
+        >
         <input
           class="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-transparent"
           type="text"
@@ -79,7 +87,7 @@
         <h2 class="text-lg font-semibold text-gray-900">Front</h2>
         <Front {name} {batch} bind:this={frontComponent} />
       </div>
-      
+
       <div class="flex flex-col gap-3 items-center">
         <h2 class="text-lg font-semibold text-gray-900">Back</h2>
         <Back {name} {batch} bind:this={backComponent} />
@@ -94,5 +102,24 @@
         Download Both Sides
       </button>
     </div>
+    <footer class="opacity-50 text-center mt-6">
+      <p>
+        Made by <a href="https://frankchiarulli.com"
+          >frank chiarulli jr (S2'25)</a
+        >
+        &&
+        <a href="https://nicknoble.works">Nick Noble (S1'25)</a> at
+        <a
+          href="https://www.recurse.com/scout/click?t=eae8065e62a2121829638ee6f3848948"
+          >the Recurse Center</a
+        >.
+      </p>
+    </footer>
   </div>
 </main>
+
+<style lang="postcss">
+  a {
+    @apply hover:underline;
+  }
+</style>
